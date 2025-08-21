@@ -33,21 +33,8 @@ class Clipmon < Formula
   end
 
   def post_install
-    # Create user config directory
+    # Create log directory
     (var/"log/clipmon").mkpath
-    config_dir = Pathname.new(Dir.home)/".clipmon"
-    config_dir.mkpath unless config_dir.exist?
-    
-    # Create default config if it doesn't exist
-    config_file = config_dir/"config.yaml"
-    unless config_file.exist?
-      config_file.write <<~EOS
-        database_path: "~/.clipmon/clipboard_history.db"
-        log_level: "info"
-        monitor_interval: 1.0
-        max_entries: 10000
-      EOS
-    end
   end
 
   service do
@@ -69,10 +56,11 @@ class Clipmon < Formula
       ClipMon has been installed as a service that can be started with:
         brew services start clipmon
 
-      Configuration file is located at:
+      ClipMon will look for a configuration file at:
         ~/.clipmon/config.yaml
 
-      To customize settings, edit the config file before starting the service.
+      Create this file to customize settings before starting the service.
+      ClipMon will use built-in defaults if no config file is present.
 
       Note: ClipMon requires macOS accessibility permissions to monitor the clipboard.
       You may be prompted to grant these permissions when first running the application.
