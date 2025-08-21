@@ -9,7 +9,19 @@ class Clipmon < Formula
   depends_on :macos
 
   def install
-    # Build the app using xcodebuild with Swift Package Manager support
+    # Set up environment for Swift Package Manager
+    ENV["SWIFT_PACKAGE_MANAGER_CACHE_PATH"] = buildpath/"spm-cache"
+    ENV["SWIFT_PACKAGE_MANAGER_BUILD_PATH"] = buildpath/"spm-build"
+    
+    # First resolve dependencies
+    system "xcodebuild", "-project", "ClipMon.xcodeproj",
+                         "-scheme", "ClipMon",
+                         "-derivedDataPath", buildpath/"DerivedData",
+                         "-clonedSourcePackagesDirPath", buildpath/"SourcePackages",
+                         "SWIFT_USE_NEW_DRIVER=NO",
+                         "-resolvePackageDependencies"
+    
+    # Build the app using xcodebuild
     system "xcodebuild", "-project", "ClipMon.xcodeproj",
                          "-scheme", "ClipMon",
                          "-configuration", "Release",
