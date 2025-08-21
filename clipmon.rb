@@ -9,14 +9,17 @@ class Clipmon < Formula
   depends_on :macos
 
   def install
-    # Build the app using xcodebuild
+    # Build the app using xcodebuild with Swift Package Manager support
     system "xcodebuild", "-project", "ClipMon.xcodeproj",
                          "-scheme", "ClipMon",
                          "-configuration", "Release",
                          "-derivedDataPath", buildpath/"DerivedData",
+                         "-clonedSourcePackagesDirPath", buildpath/"SourcePackages",
                          "SYMROOT=#{buildpath}/build",
                          "DSTROOT=#{buildpath}/dst",
                          "MACOSX_DEPLOYMENT_TARGET=#{MacOS.version}",
+                         "SWIFT_PACKAGE_MANAGER_BUILD_PHASE_OUTPUT_DIR=#{buildpath}/spm-build",
+                         "SWIFT_USE_NEW_DRIVER=NO",
                          "build"
 
     # Install the binary
