@@ -4,61 +4,31 @@ class Clipmon < Formula
   url "https://github.com/svshevtsov/ClipMon.git", tag: "v1.0.0"
   license "MIT"
 
-  depends_on "swift" => :build
   depends_on xcode: ["12.0", :build]
   depends_on :macos
 
   def install
-    # Set up environment for Swift Package Manager
-    ENV["SWIFT_PACKAGE_MANAGER_CACHE_PATH"] = buildpath/"spm-cache"
-    ENV["SWIFT_PACKAGE_MANAGER_BUILD_PATH"] = buildpath/"spm-build"
-    
-    # First resolve dependencies
-    system "xcodebuild", "-project", "ClipMon.xcodeproj",
-                         "-scheme", "ClipMon",
-                         "-derivedDataPath", buildpath/"DerivedData",
-                         "-clonedSourcePackagesDirPath", buildpath/"SourcePackages",
-                         "SWIFT_USE_NEW_DRIVER=NO",
-                         "-resolvePackageDependencies"
-    
     # Build the app using xcodebuild
     system "xcodebuild", "-project", "ClipMon.xcodeproj",
                          "-scheme", "ClipMon",
                          "-configuration", "Release",
                          "-derivedDataPath", buildpath/"DerivedData",
-                         "-clonedSourcePackagesDirPath", buildpath/"SourcePackages",
                          "SYMROOT=#{buildpath}/build",
                          "DSTROOT=#{buildpath}/dst",
+                         "OTHER_SWIFT_FLAGS=-disable-sandbox",
                          "MACOSX_DEPLOYMENT_TARGET=#{MacOS.version}",
-                         "SWIFT_PACKAGE_MANAGER_BUILD_PHASE_OUTPUT_DIR=#{buildpath}/spm-build",
-                         "SWIFT_USE_NEW_DRIVER=NO",
+                         "-IDEPackageSupportDisablePluginExecutionSandbox=1",
+                         "-IDEPackageSupportDisableManifestSandbox=1",
                          "build"
 
     # Install the binary
-    app_path = buildpath/"build/Release/ClipMon.app"
-    bin.install app_path/"Contents/MacOS/ClipMon" => "clipmon"
-    
-    # Create config directory
-    (etc/"clipmon").mkpath
-    
-    # Install example config if it exists
-    if File.exist?("config.yaml.example")
-      (etc/"clipmon").install "config.yaml.example"
-    end
-  end
-
-  def post_install
-    # Create log directory
-    (var/"log/clipmon").mkpath
+    bin.install buildpath/"build/Release/ClipMon" => "clipmon"
   end
 
   service do
     run [opt_bin/"clipmon"]
     environment_variables PATH: std_service_path_env
     keep_alive true
-    log_path var/"log/clipmon/clipmon.log"
-    error_log_path var/"log/clipmon/clipmon.log"
-    working_dir var/"log/clipmon"
   end
 
   test do
@@ -81,7 +51,7 @@ class Clipmon < Formula
       You may be prompted to grant these permissions when first running the application.
 
       Database will be stored at:
-        ~/.clipmon/clipboard_history.db (by default)
+        ~/.clipmon/database.sqlite (by default)
 
       View logs with:
         tail -f $(brew --prefix)/var/log/clipmon/clipmon.log
