@@ -1,7 +1,7 @@
 class Clipmon < Formula
   desc "macOS command-line tool for monitoring and storing clipboard text entries"
   homepage "https://github.com/svshevtsov/ClipMon"
-  url "https://github.com/svshevtsov/ClipMon.git", tag: "v1.0.0"
+  url "https://github.com/svshevtsov/ClipMon.git", tag: "v1.1.0"
   license "MIT"
 
   depends_on xcode: ["12.0", :build]
