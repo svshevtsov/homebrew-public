@@ -3,7 +3,8 @@
     "allow": [
       "Bash(ruby:*)",
       "Bash(brew install:*)",
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "Bash(brew reinstall:*)"
     ],
     "deny": [],
     "ask": []
