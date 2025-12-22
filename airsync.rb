@@ -9,7 +9,6 @@ class Airsync < Formula
   depends_on :macos => :tahoe
 
   depends_on "scrcpy" => :optional
-  depends_on "android-platform-tools" => :optional
   depends_on "media-control" => :optional
 
   def install
