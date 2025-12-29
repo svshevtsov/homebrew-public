@@ -1,8 +1,8 @@
 class Airsync < Formula
   desc "macOS application bringing continuity features to Android devices"
   homepage "https://github.com/svshevtsov/airsync-mac"
-  url "https://github.com/svshevtsov/airsync-mac.git", branch: "r3"
-  version "2.2.1-r3"
+  url "https://github.com/svshevtsov/airsync-mac.git", branch: "r4"
+  version "2.2.1-r4"
   license "MPL-2.0"
 
   depends_on xcode: ["26.0", :build]
